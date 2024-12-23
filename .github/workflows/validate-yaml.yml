@@ -10,19 +10,23 @@ on:
 
 jobs:
   validate-yaml:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Check out the code
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 2.7
+      - name: Install Python 2.7
+        run: |
+          sudo apt update
+          sudo apt install -y python2.7
+          python2 --version  # Verify Python 2.7 is installed
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py
+          python2 get-pip.py
+          pip install -r requirements.txt
 
       - name: Validate YAML file
         run: python tools/check_projects_yaml.py
